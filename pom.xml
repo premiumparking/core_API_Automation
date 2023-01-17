@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>parkOS.automation.api</groupId>
-	<artifactId>parkOS.automation.api</artifactId>
+	<groupId>core.automation.api</groupId>
+	<artifactId>core.automation.api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ParkOS_Automation_API</name>
-	<description>ParkOS_Automation_API</description>
+	<name>core_API_Automation</name>
+	<description>core_API_Automation</description>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
