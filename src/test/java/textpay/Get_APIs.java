@@ -6,7 +6,6 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
 import com.google.gson.Gson;
-import com.graphQL.pojo.CreateParking;
 import com.graphQL.pojo.GetLocationPageData;
 
 import components.BaseClass;

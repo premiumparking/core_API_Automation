@@ -2,7 +2,7 @@ package com.graphQL.pojo;
 
 import java.util.List;
 
-public class CreateParkingVariable {
+public class Variable_PromoCode {
 
 	int minutes;
 	String promo_code;
