@@ -68,7 +68,8 @@ public class BaseClass extends extentReports {
 		String name = testMethod.getDeclaringClass().getTypeName();
 		String className = name.substring(name.lastIndexOf(".") + 1);
 
-		return "<span style=\"color:blue;\">" + className + " : </span> " + testMethod.getName();
+		return "<span style='color:#d64161;'>" + className + " : </span> " + "<span style='color:#4040a1;'>"
+				+ testMethod.getName() + " : </span> ";
 
 	}
 

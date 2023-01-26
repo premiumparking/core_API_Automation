@@ -1,9 +1,9 @@
 package com.graphQL.pojo;
 
-public class CreateParking {
+public class CreateParking_Card {
 
 	String operationName;
-	CreateParkingVariable variables;
+	Variable_Card variables;
 	String query;
 
 	public String getOperationName() {
@@ -14,11 +14,11 @@ public class CreateParking {
 		this.operationName = operationName;
 	}
 
-	public CreateParkingVariable getVariables() {
+	public Variable_Card getVariables() {
 		return variables;
 	}
 
-	public void setVariables(CreateParkingVariable variables) {
+	public void setVariables(Variable_Card variables) {
 		this.variables = variables;
 	}
 
@@ -34,7 +34,5 @@ public class CreateParking {
 	public String toString() {
 		return "{operationName=" + operationName + ", variables=" + variables + ", query=" + query + "}";
 	}
-	
-	
 
 }
