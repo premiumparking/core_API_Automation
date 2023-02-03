@@ -123,9 +123,9 @@ public class BaseClass extends extentReports {
 		return new SimpleDateFormat("HHmmss").format(new Date());
 	}
 
-	public String getUnixTimestamp() {
-		long unixTime = System.currentTimeMillis() / 1000L;
-		return unixTime + "";
+	public long getUnixTimestamp() {
+		return System.currentTimeMillis() / 1000L;
+		//return unixTime + "";
 	}
 
 	/*
