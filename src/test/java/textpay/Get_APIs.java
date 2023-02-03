@@ -3,10 +3,13 @@ package textpay;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
+import com.graphQL.pojo.GetSpecificState;
+import com.graphQL.pojo.GetStates;
 import org.testng.annotations.Test;
 
 import com.google.gson.Gson;
 import com.graphQL.pojo.GetLocationPageData;
+import com.graphQL.pojo.GetLocationRates;
 
 import components.BaseClass;
 import components.Constants;
@@ -14,10 +17,15 @@ import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
+import java.util.*;
+
 public class Get_APIs extends BaseClass {
 
 	Gson gson = new Gson();
 	private String getLocationPageData = getRequestBody("getLocationData");
+	private  String getLocationRates = getRequestBody("getLocationRates");
+	private  String getStatesBody = getRequestBody("getStates");
+	private  String getSpecificStateBody = getRequestBody("getState");
 
 	@Test()
 	public void TextPay_TC_01_getLocationPageData() {
@@ -51,6 +59,101 @@ public class Get_APIs extends BaseClass {
 		passStep("Location Name  : " + j.getString("data.location.name"));
 		passStep("Location Friendly_name  : " + j.getString("data.location.friendly_name"));
 		passStep("Location Address  : " + j.getString("data.location.address"));
+
+	}
+
+	@Test()
+	public void TextPay_TC_02_getLocationRates() {
+
+		GetLocationRates getLocRates = gson.fromJson(getLocationRates, GetLocationRates.class);
+
+		// Setting the test data
+		getLocRates.getVariables().setName(getRandomLocation());
+		getLocRates.getVariables().setTimestamp(getUnixTimestamp());
+
+		String request_Payload = gson.toJson(getLocRates);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		passStep(request_Payload);
+
+		Response resp = given().log().all().contentType("application/json")
+				.headers("source-auth-token", source_auth_token).header("x-auth-token", x_auth_token)
+				.body(request_Payload).when().log().all().post("/graphql");
+		stepInfo("Response Body");
+		passStep(resp.asString());
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + resp.getStatusCode());
+		assertEquals(resp.getStatusCode(), 200);
+		JsonPath j = new JsonPath(resp.asString());
+
+		passStep("Location Id  : " + j.getString("data.location.id"));
+		passStep("Rate Group Id  : " + j.getString("data.location.rate_groups[0].id"));
+		passStep("Rate Group Title  : " + j.getString("data.location.rate_groups[0].title"));
+
+	}
+
+	@Test()
+	public void TextPay_TC_03_getStates() {
+
+		GetStates getStates = gson.fromJson(getStatesBody, GetStates.class);
+
+		String request_Payload = gson.toJson(getStates);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		passStep(request_Payload);
+
+		Response resp = given().log().all().contentType("application/json")
+				.headers("source-auth-token", source_auth_token).header("x-auth-token", x_auth_token)
+				.body(request_Payload).when().log().all().post("/graphql");
+		stepInfo("Response Body");
+		passStep(resp.asString());
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + resp.getStatusCode());
+		assertEquals(resp.getStatusCode(), 200);
+		JsonPath j = new JsonPath(resp.asString());
+
+		passStep("State abbreviation  : " + j.getString("data.states.abbreviation"));
+		passStep("State name  : " + j.getString("data.states.name"));
+		passStep("State description  : " + j.getString("data.states.description"));
+
+	}
+
+	@Test()
+	public void TextPay_TC_04_getSpecificState() {
+
+//		GetSpecificState getSpecificState = gson.fromJson(getSpecificStateBody, GetSpecificState.class);
+//		getSpecificState.getVariables().setEnum("LOUISIANA");
+
+		String request_Payload = gson.toJson(getSpecificStateBody);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		passStep(request_Payload);
+
+		Response resp = given().log().all().contentType("application/json")
+				.headers("source-auth-token", source_auth_token).header("x-auth-token", x_auth_token)
+				.body(request_Payload).when().log().all().post("/graphql");
+		stepInfo("Response Body");
+		passStep(resp.asString());
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + resp.getStatusCode());
+		assertEquals(resp.getStatusCode(), 200);
+		JsonPath j = new JsonPath(resp.asString());
+
+		passStep("State abbreviation  : " + j.getString("data.state.abbreviation"));
+		passStep("State name  : " + j.getString("data.state.name"));
+		passStep("State description  : " + j.getString("data.state.description"));
 
 	}
 
