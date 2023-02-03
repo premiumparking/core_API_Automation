@@ -123,6 +123,11 @@ public class BaseClass extends extentReports {
 		return new SimpleDateFormat("HHmmss").format(new Date());
 	}
 
+	public String getUnixTimestamp() {
+		long unixTime = System.currentTimeMillis() / 1000L;
+		return unixTime + "";
+	}
+
 	/*
 	 * Usage : To get the random Lattitude
 	 * 
