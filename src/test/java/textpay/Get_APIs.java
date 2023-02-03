@@ -23,9 +23,9 @@ public class Get_APIs extends BaseClass {
 
 	Gson gson = new Gson();
 	private String getLocationPageData = getRequestBody("getLocationData");
-	private  String getLocationRates = getRequestBody("getLocationRates");
-	private  String getStatesBody = getRequestBody("getStates");
-	private  String getSpecificStateBody = getRequestBody("getState");
+	private String getLocationRates = getRequestBody("getLocationRates");
+	private String getStatesBody = getRequestBody("getStates");
+	private String getSpecificStateBody = getRequestBody("getState");
 
 	@Test()
 	public void TextPay_TC_01_getLocationPageData() {
@@ -89,10 +89,31 @@ public class Get_APIs extends BaseClass {
 		passStep("Received Status code : " + resp.getStatusCode());
 		assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
+		
+		// Getting rate groups list
+		List<Object> rg_list = j.getList("data.location.rate_groups");
+		passStep("Found " + rg_list.size() + " rate group(s)");
+		for (int i = 0; i < rg_list.size(); i++) {
+			stepInfo("Rate group " + (i + 1) + " data");
+			passStep("Rate Group Id  : " + j.getString("data.location.rate_groups[" + i + "].id"));
+			passStep("Rate Group Title  : " + j.getString("data.location.rate_groups[" + i + "].title"));
+			
+			// Getting rates list
+			List<Object> rate_List = j.getList("data.location.rate_groups[" + i + "].rates");
+			passStep("Found " + rate_List.size() + " rate(s)");
+			for (int rj = 0; rj < rate_List.size(); rj++) {
+				stepInfo("Rate " + (rj + 1) + " data");
+				passStep("Rate Kind  : " + j.getString("data.location.rate_groups[" + i + "].rates[" + rj + "].kind"));
+				passStep("Rate Name  : " + j.getString("data.location.rate_groups[" + i + "].rates[" + rj + "].name"));
+				passStep("Rate Pre_Tax price  : "
+						+ j.getString("data.location.rate_groups[" + i + "].rates[" + rj + "].pre_tax_price"));
+				passStep(
+						"Rate Price  : " + j.getString("data.location.rate_groups[" + i + "].rates[" + rj + "].price"));
+				passStep("Rate Visibility  : "
+						+ j.getString("data.location.rate_groups[" + i + "].rates[" + rj + "].visibility"));
+			}
 
-		passStep("Location Id  : " + j.getString("data.location.id"));
-		passStep("Rate Group Id  : " + j.getString("data.location.rate_groups[0].id"));
-		passStep("Rate Group Title  : " + j.getString("data.location.rate_groups[0].title"));
+		}
 
 	}
 

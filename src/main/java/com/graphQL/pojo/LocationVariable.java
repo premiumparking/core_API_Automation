@@ -6,7 +6,7 @@ public class LocationVariable {
 
 	String name;
 	List<String> sources;
-	String timestamp;
+	long timestamp;
 	String Enum;
 
 	public String getEnum() {
@@ -17,11 +17,11 @@ public class LocationVariable {
 		Enum = anEnum;
 	}
 
-	public String getTimestamp() {
+	public long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(String timestamp) {
+	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
 
