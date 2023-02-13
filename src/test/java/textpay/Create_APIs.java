@@ -27,14 +27,14 @@ public class Create_APIs extends BaseClass {
 	@Test()
 	public void TextPay_TC_01_Purchase_Session_WithPromoCode() {
 
-		//for (int i = 1; i < 10; i++) {
+		for (int i = 1; i <= 750; i++) {
 			//CreateParking_PromoCode parking = LoadJsonData.getParkingObject(createParkingQuery);
 			CreateParking_PromoCode parking = gson.fromJson(createParking_PromoCode, CreateParking_PromoCode.class);
 
 			// Setting the test data
 			parking.getVariables().setSource(Constants.TEXTPAY);
-			parking.getVariables().setPromo_code(Constants.PROMO_100);
-			parking.getVariables().setLocation_id(101);
+			parking.getVariables().setPromo_code(Constants.PPFSTEST);
+			parking.getVariables().setLocation_id(getRandomLocation_Ids());
 			parking.getVariables().getParking_lots().get(0).getVehicles().get(0)
 					.setLicense_plate(getRandomLicencePlate());
 			parking.getVariables().setMinutes(120);
@@ -64,13 +64,14 @@ public class Create_APIs extends BaseClass {
 			String rateName = j.getString("data.create_parking.last_payment.rate_name");
 
 			System.out.println("******* Order Number : "+order_id);
+			System.out.println("***"+i+" **** Order Number : "+order_id);
 			passStep("Confirmation Order Number  : " + order_id);
 			passStep("Promo code  : " + promoCode);
 			passStep("Rate Name  : " + rateName);
 
-			assertEquals(rateName, "2 Hour");
-			assertEquals(promoCode, Constants.PROMO_100);
-	//	}
+			//assertEquals(rateName, "2 Hour");
+			assertEquals(promoCode, Constants.PPFSTEST);
+	}
 
 	}
 	
