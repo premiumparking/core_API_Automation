@@ -23,6 +23,7 @@ public class BaseClass extends extentReports {
 
 	protected String uri = "";
 	protected String source_auth_token, x_auth_token;
+	protected String spa_x_auth_token,spa_userName, spa_Password;
 	Properties config;
 	FileInputStream fis;
 
@@ -44,6 +45,9 @@ public class BaseClass extends extentReports {
 		uri = config.getProperty("URI");
 		source_auth_token = config.getProperty("source-auth-token");
 		x_auth_token = config.getProperty("x-auth-token");
+		spa_x_auth_token = config.getProperty("spa_x_auth_token");
+		spa_userName = config.getProperty("spa_username");
+		spa_Password = config.getProperty("spa_password");
 
 	}
 
@@ -123,9 +127,17 @@ public class BaseClass extends extentReports {
 		return new SimpleDateFormat("HHmmss").format(new Date());
 	}
 
-	public long getUnixTimestamp() {
+	public long getCurrentUnixTimestamp() {
 		return System.currentTimeMillis() / 1000L;
-		//return unixTime + "";
+		// return unixTime + "";
+	}
+
+	public long geFutureUnixTimestamp(int hours) {
+
+		long ft = System.currentTimeMillis() + hours * 60 * 60 * 1000;
+
+		return ft / 1000L;
+
 	}
 
 	/*
@@ -190,6 +202,15 @@ public class BaseClass extends extentReports {
 		int index = random.nextInt(locations.length);
 
 		return locations[index];
+	}
+
+	/*
+	 * Usage : To get random States from list of States
+	 * 
+	 * Author : Venu Thota (venu.t@comakeit.com)
+	 */
+	public String getRandomState() {
+		return Constants.STATES[new Random().nextInt(Constants.STATES.length)];
 	}
 
 }
