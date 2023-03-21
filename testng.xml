@@ -2,8 +2,11 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Suite">
   <test thread-count="5" name="Test">
-    <classes>      
-      <class name="com.graphQL.tests.LocationAPIs"/>
+    <classes>
+      <class name="SPA.Create_APIs"/>
+      <class name="textpay.Get_APIs"/>
+      <class name="textpay.Create_APIs"/>
+      <class name="SPA.Get_APIs"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
