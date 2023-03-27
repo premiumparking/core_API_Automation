@@ -22,7 +22,7 @@ public class Constants {
 	public static final String SESSION = "SESSION";
 	public static final String RESERVATION = "RESERVATION";
 	public static final String SUBSCRIPTION = "SUBSCRIPTION";
-	public static final int[] LOCATION_IDS = { 101, 50, 892 };
+	public static final int[] LOCATION_IDS = { 101, 50, 887,483,530,624,126,179 };
 	public static final String[] STATES = { "ALABAMA", "ALASKA", "ARIZONA", "ARKANSAS", "CALIFORNIA", "COLORADO",
 			"CONNECTICUT", "DELAWARE", "DISTRICT_OF_COLUMBIA", "FLORIDA", "GEORGIA", "HAWAII", "IDAHO", "ILLINOIS",
 			"INDIANA", "IOWA", "KANSAS", "KENTUCKY", "LOUISIANA", "MAINE", "MARYLAND", "MASSACHUSETTS", "MICHIGAN",
