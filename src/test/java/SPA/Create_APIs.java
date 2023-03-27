@@ -73,180 +73,184 @@ public class Create_APIs extends BaseClass {
 
 	@Test(dependsOnMethods = { "signIn" })
 	public void SPA_TC_01_Purchase_Reservation() {
+		for (int i = 1; i <= 1000; i++) {
+			CreateReservation parking = gson.fromJson(spa_create_reservation, CreateReservation.class);
 
-		CreateReservation parking = gson.fromJson(spa_create_reservation, CreateReservation.class);
+			// Setting the test data
+			parking.getVariables().setStarts_at(geFutureUnixTimestamp(0));
+			parking.getVariables().setExpires_at(geFutureUnixTimestamp(48));
+			parking.getVariables().setSource(Constants.WEB);
+			parking.getVariables().setParking_time_type(Constants.RESERVATION);
+			parking.getVariables().setCard_id(payment_cardId);
+			parking.getVariables().setLocation_id(getRandomLocation_Ids());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(0)
+					.setLicense_plate(getRandomLicencePlate());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setState(getRandomState());
 
-		// Setting the test data
-		parking.getVariables().setStarts_at(getCurrentUnixTimestamp());
-		parking.getVariables().setExpires_at(geFutureUnixTimestamp(4));
-		parking.getVariables().setSource(Constants.WEB);
-		parking.getVariables().setParking_time_type(Constants.RESERVATION);
-		parking.getVariables().setCard_id(payment_cardId);
-		parking.getVariables().setLocation_id(getRandomLocation_Ids());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setLicense_plate(getRandomLicencePlate());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setState(getRandomState());
+			// String request_Payload = LoadJsonData.convertToJSON(parking);
+			String request_Payload = gson.toJson(parking);
 
-		// String request_Payload = LoadJsonData.convertToJSON(parking);
-		String request_Payload = gson.toJson(parking);
+			RestAssured.baseURI = uri;
+			stepInfo("Request Payload");
 
-		RestAssured.baseURI = uri;
-		stepInfo("Request Payload");
+			passStep(request_Payload);
 
-		passStep(request_Payload);
+			Response resp = given().log().all().contentType("application/json")
+					.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
+					.body(request_Payload).when().log().all().post("/graphql");
+			stepInfo("Response Body");
+			passStep(resp.asString());
 
-		Response resp = given().log().all().contentType("application/json")
-				.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
-				.body(request_Payload).when().log().all().post("/graphql");
-		stepInfo("Response Body");
-		passStep(resp.asString());
+			stepInfo("Response Validation");
 
-		stepInfo("Response Validation");
+			passStep("Received Status code : " + resp.getStatusCode());
+			assertEquals(resp.getStatusCode(), 200);
+			JsonPath j = new JsonPath(resp.asString());
 
-		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
-		JsonPath j = new JsonPath(resp.asString());
+			String order_id = j.getString("data.create_parking.order_number_id");
+			String rateName = j.getString("data.create_parking.last_payment.rate_name");
+			String oder_Total = j.getString("data.create_parking.order_total");
+			String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
+			String discount_amount = j.getString("data.create_parking.discount_amount");
 
-		String order_id = j.getString("data.create_parking.order_number_id");
-		String rateName = j.getString("data.create_parking.last_payment.rate_name");
-		String oder_Total = j.getString("data.create_parking.order_total");
-		String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
-		String discount_amount = j.getString("data.create_parking.discount_amount");
+			System.out.println(i + "******* Order Number : " + order_id);
+			passStep("Confirmation Order Number  : " + order_id);
+			passStep("Rate Name  : " + rateName);
+			passStep("Total amount  : " + oder_Total);
+			passStep("Total without discount  : " + order_total_without_discount);
+			passStep("Discount Amount  : " + discount_amount);
 
-		System.out.println("******* Order Number : " + order_id);
-		passStep("Confirmation Order Number  : " + order_id);
-		passStep("Rate Name  : " + rateName);
-		passStep("Total amount  : " + oder_Total);
-		passStep("Total without discount  : " + order_total_without_discount);
-		passStep("Discount Amount  : " + discount_amount);
-
+		}
 	}
 
 	@Test(dependsOnMethods = { "signIn" })
 	public void SPA_TC_02_Purchase_Suscription() {
+		for (int i = 1; i <= 1000; i++) {
+			CreateSubscription parking = gson.fromJson(spa_create_subscription, CreateSubscription.class);
 
-		CreateSubscription parking = gson.fromJson(spa_create_subscription, CreateSubscription.class);
+			// Setting the test data
+			parking.getVariables().setStarts_at(getCurrentUnixTimestamp());
+			parking.getVariables().setParking_time_rate_id(57);
+			parking.getVariables().setSource(Constants.WEB);
+			parking.getVariables().setParking_time_type(Constants.SUBSCRIPTION);
+			parking.getVariables().setCard_id(payment_cardId);
+			parking.getVariables().setLocation_id(getRandomLocation_Ids());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(0)
+					.setLicense_plate(getRandomLicencePlate());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setState(getRandomState());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(1)
+					.setLicense_plate(getRandomLicencePlate());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(1).setState(getRandomState());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(2)
+					.setLicense_plate(getRandomLicencePlate());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(2).setState(getRandomState());
 
-		// Setting the test data
-		parking.getVariables().setStarts_at(getCurrentUnixTimestamp());
-		parking.getVariables().setParking_time_rate_id(57);
-		parking.getVariables().setSource(Constants.WEB);
-		parking.getVariables().setParking_time_type(Constants.SUBSCRIPTION);
-		parking.getVariables().setCard_id(payment_cardId);
-		parking.getVariables().setLocation_id(getRandomLocation_Ids());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setLicense_plate(getRandomLicencePlate());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setState(getRandomState());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(1).setLicense_plate(getRandomLicencePlate());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(1).setState(getRandomState());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(2).setLicense_plate(getRandomLicencePlate());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(2).setState(getRandomState());
+			// String request_Payload = LoadJsonData.convertToJSON(parking);
+			String request_Payload = gson.toJson(parking);
 
-		// String request_Payload = LoadJsonData.convertToJSON(parking);
-		String request_Payload = gson.toJson(parking);
+			RestAssured.baseURI = uri;
+			stepInfo("Request Payload");
 
-		RestAssured.baseURI = uri;
-		stepInfo("Request Payload");
+			passStep(request_Payload);
 
-		passStep(request_Payload);
+			Response resp = given().log().all().contentType("application/json")
+					.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
+					.body(request_Payload).when().log().all().post("/graphql");
+			stepInfo("Response Body");
+			passStep(resp.asString());
 
-		Response resp = given().log().all().contentType("application/json")
-				.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
-				.body(request_Payload).when().log().all().post("/graphql");
-		stepInfo("Response Body");
-		passStep(resp.asString());
+			stepInfo("Response Validation");
 
-		stepInfo("Response Validation");
+			passStep("Received Status code : " + resp.getStatusCode());
+			assertEquals(resp.getStatusCode(), 200);
+			JsonPath j = new JsonPath(resp.asString());
 
-		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
-		JsonPath j = new JsonPath(resp.asString());
+			String order_id = j.getString("data.create_parking.order_number_id");
+			String rateName = j.getString("data.create_parking.last_payment.rate_name");
+			String oder_Total = j.getString("data.create_parking.order_total");
+			String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
+			String discount_amount = j.getString("data.create_parking.discount_amount");
 
-		String order_id = j.getString("data.create_parking.order_number_id");
-		String rateName = j.getString("data.create_parking.last_payment.rate_name");
-		String oder_Total = j.getString("data.create_parking.order_total");
-		String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
-		String discount_amount = j.getString("data.create_parking.discount_amount");
-
-		System.out.println("******* Order Number : " + order_id);
-		passStep("Confirmation Order Number  : " + order_id);
-		passStep("Rate Name  : " + rateName);
-		passStep("Total amount  : " + oder_Total);
-		passStep("Total without discount  : " + order_total_without_discount);
-		passStep("Discount Amount  : " + discount_amount);
-
+			System.out.println(i + "******* Order Number : " + order_id);
+			passStep("Confirmation Order Number  : " + order_id);
+			passStep("Rate Name  : " + rateName);
+			passStep("Total amount  : " + oder_Total);
+			passStep("Total without discount  : " + order_total_without_discount);
+			passStep("Discount Amount  : " + discount_amount);
+		}
 	}
 
 	@Test(dependsOnMethods = { "signIn" })
 	public void SPA_TC_03_Purchase_Session() {
+		for (int i = 1; i <= 1000; i++) {
+			CreateSession parking = gson.fromJson(spa_create_session, CreateSession.class);
 
-		CreateSession parking = gson.fromJson(spa_create_session, CreateSession.class);
+			// Setting the test data
+			parking.getVariables().setMinutes(Constants._5HRS);
+			parking.getVariables().setSource(Constants.WEB);
+			parking.getVariables().setParking_time_type(Constants.SESSION);
+			parking.getVariables().setCard_id(payment_cardId);
+			parking.getVariables().setLocation_id(getRandomLocation_Ids());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(0)
+					.setLicense_plate(getRandomLicencePlate());
+			parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setState(getRandomState());
 
-		// Setting the test data
-		parking.getVariables().setMinutes(Constants._5HRS);
-		parking.getVariables().setSource(Constants.WEB);
-		parking.getVariables().setParking_time_type(Constants.SESSION);
-		parking.getVariables().setCard_id(payment_cardId);
-		parking.getVariables().setLocation_id(getRandomLocation_Ids());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setLicense_plate(getRandomLicencePlate());
-		parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setState(getRandomState());
+			// String request_Payload = LoadJsonData.convertToJSON(parking);
+			String request_Payload = gson.toJson(parking);
 
-		// String request_Payload = LoadJsonData.convertToJSON(parking);
-		String request_Payload = gson.toJson(parking);
+			RestAssured.baseURI = uri;
+			stepInfo("Request Payload");
 
-		RestAssured.baseURI = uri;
-		stepInfo("Request Payload");
+			passStep(request_Payload);
 
-		passStep(request_Payload);
+			Response resp = given().log().all().contentType("application/json")
+					.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
+					.body(request_Payload).when().log().all().post("/graphql");
+			stepInfo("Response Body");
+			passStep(resp.asString());
 
-		Response resp = given().log().all().contentType("application/json")
-				.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
-				.body(request_Payload).when().log().all().post("/graphql");
-		stepInfo("Response Body");
-		passStep(resp.asString());
+			stepInfo("Response Validation");
 
-		stepInfo("Response Validation");
+			passStep("Received Status code : " + resp.getStatusCode());
+			assertEquals(resp.getStatusCode(), 200);
+			JsonPath j = new JsonPath(resp.asString());
 
-		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
-		JsonPath j = new JsonPath(resp.asString());
+			String order_id = j.getString("data.create_parking.order_number_id");
+			String rateName = j.getString("data.create_parking.last_payment.rate_name");
+			String oder_Total = j.getString("data.create_parking.order_total");
+			String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
+			String discount_amount = j.getString("data.create_parking.discount_amount");
 
-		String order_id = j.getString("data.create_parking.order_number_id");
-		String rateName = j.getString("data.create_parking.last_payment.rate_name");
-		String oder_Total = j.getString("data.create_parking.order_total");
-		String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
-		String discount_amount = j.getString("data.create_parking.discount_amount");
+			System.out.println("******* Order Number : " + order_id);
+			passStep("Confirmation Order Number  : " + order_id);
+			passStep("Rate Name  : " + rateName);
+			passStep("Total amount  : " + oder_Total);
+			passStep("Total without discount  : " + order_total_without_discount);
+			passStep("Discount Amount  : " + discount_amount);
 
-		System.out.println("******* Order Number : " + order_id);
-		passStep("Confirmation Order Number  : " + order_id);
-		passStep("Rate Name  : " + rateName);
-		passStep("Total amount  : " + oder_Total);
-		passStep("Total without discount  : " + order_total_without_discount);
-		passStep("Discount Amount  : " + discount_amount);
-
+		}
 	}
-/*
-	@AfterMethod
-	public void SPA_LogOut() {
-
-		RestAssured.baseURI = uri;
-		stepInfo("Request Payload");
-
-		passStep(spa_signOut);
-
-		Response resp = given().log().all().contentType("application/json")
-				.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
-				.body(spa_signOut).when().log().all().post("/graphql");
-		stepInfo("Response Body");
-		passStep(resp.asString());
-
-		stepInfo("Response Validation");
-
-		passStep("Received Status code : " + resp.getStatusCode());
-		
-		JsonPath j = new JsonPath(resp.asString());
-		
-
-		System.out.println("******* Order Number : " + resp.asString());
-
-	}
-*/
+	/*
+	 * @AfterMethod public void SPA_LogOut() {
+	 * 
+	 * RestAssured.baseURI = uri; stepInfo("Request Payload");
+	 * 
+	 * passStep(spa_signOut);
+	 * 
+	 * Response resp = given().log().all().contentType("application/json")
+	 * .headers("source-auth-token", source_auth_token).header("x-auth-token",
+	 * auth_token) .body(spa_signOut).when().log().all().post("/graphql");
+	 * stepInfo("Response Body"); passStep(resp.asString());
+	 * 
+	 * stepInfo("Response Validation");
+	 * 
+	 * passStep("Received Status code : " + resp.getStatusCode());
+	 * 
+	 * JsonPath j = new JsonPath(resp.asString());
+	 * 
+	 * 
+	 * System.out.println("******* Order Number : " + resp.asString());
+	 * 
+	 * }
+	 */
 }
