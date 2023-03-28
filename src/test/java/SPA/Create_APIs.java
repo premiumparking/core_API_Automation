@@ -32,7 +32,7 @@ public class Create_APIs extends BaseClass {
 	private String spa_create_reservation = getRequestBody("spa_create_reservation");
 	private String spa_create_subscription = getRequestBody("spa_create_subscription");
 
-	@Test
+	
 	public void signIn() {
 
 		SignIn signIn = gson.fromJson(spa_signIn, SignIn.class);
@@ -62,6 +62,8 @@ public class Create_APIs extends BaseClass {
 		passStep("Received Status code : " + resp.getStatusCode());
 		assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
+		
+		//System.out.println(resp.asPrettyString());
 
 		auth_token = j.getString("data.login.auth_token");
 		payment_cardId = j.getLong("data.login.payment_methods[0].entity_id");
@@ -71,9 +73,12 @@ public class Create_APIs extends BaseClass {
 
 	}
 
-	@Test(dependsOnMethods = { "signIn" })
+	
+	 @Test
 	public void SPA_TC_01_Purchase_Reservation() {
-		for (int i = 1; i <= 1000; i++) {
+		
+		signIn();
+		for (int i = 1; i <= 2000; i++) {
 			CreateReservation parking = gson.fromJson(spa_create_reservation, CreateReservation.class);
 
 			// Setting the test data
@@ -86,6 +91,7 @@ public class Create_APIs extends BaseClass {
 			parking.getVariables().getParking_lots().get(0).getVehicles().get(0)
 					.setLicense_plate(getRandomLicencePlate());
 			parking.getVariables().getParking_lots().get(0).getVehicles().get(0).setState(getRandomState());
+			parking.getVariables().setSave_payment_method(true);
 
 			// String request_Payload = LoadJsonData.convertToJSON(parking);
 			String request_Payload = gson.toJson(parking);
@@ -123,9 +129,10 @@ public class Create_APIs extends BaseClass {
 		}
 	}
 
-	@Test(dependsOnMethods = { "signIn" })
+	@Test()
 	public void SPA_TC_02_Purchase_Suscription() {
-		for (int i = 1; i <= 1000; i++) {
+		signIn();
+		for (int i = 1; i <= 2000; i++) {
 			CreateSubscription parking = gson.fromJson(spa_create_subscription, CreateSubscription.class);
 
 			// Setting the test data
@@ -134,6 +141,7 @@ public class Create_APIs extends BaseClass {
 			parking.getVariables().setSource(Constants.WEB);
 			parking.getVariables().setParking_time_type(Constants.SUBSCRIPTION);
 			parking.getVariables().setCard_id(payment_cardId);
+			parking.getVariables().setSave_payment_method(true);
 			parking.getVariables().setLocation_id(getRandomLocation_Ids());
 			parking.getVariables().getParking_lots().get(0).getVehicles().get(0)
 					.setLicense_plate(getRandomLicencePlate());
@@ -180,16 +188,21 @@ public class Create_APIs extends BaseClass {
 		}
 	}
 
-	@Test(dependsOnMethods = { "signIn" })
+	//@Test(dependsOnMethods = { "signIn" })
+	
+	@Test
 	public void SPA_TC_03_Purchase_Session() {
-		for (int i = 1; i <= 1000; i++) {
+		signIn();
+		for (int i = 1; i <= 1500; i++) {
 			CreateSession parking = gson.fromJson(spa_create_session, CreateSession.class);
 
 			// Setting the test data
 			parking.getVariables().setMinutes(Constants._5HRS);
 			parking.getVariables().setSource(Constants.WEB);
 			parking.getVariables().setParking_time_type(Constants.SESSION);
+			//parking.getVariables().setCard_id(payment_cardId);
 			parking.getVariables().setCard_id(payment_cardId);
+			parking.getVariables().setSave_payment_method(true);
 			parking.getVariables().setLocation_id(getRandomLocation_Ids());
 			parking.getVariables().getParking_lots().get(0).getVehicles().get(0)
 					.setLicense_plate(getRandomLicencePlate());
@@ -221,7 +234,7 @@ public class Create_APIs extends BaseClass {
 			String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
 			String discount_amount = j.getString("data.create_parking.discount_amount");
 
-			System.out.println("******* Order Number : " + order_id);
+			System.out.println(i + "******* Order Number : " + order_id);
 			passStep("Confirmation Order Number  : " + order_id);
 			passStep("Rate Name  : " + rateName);
 			passStep("Total amount  : " + oder_Total);
