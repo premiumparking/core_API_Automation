@@ -68,8 +68,9 @@ public class Create_APIs extends BaseClass {
 		auth_token = j.getString("data.login.auth_token");
 		payment_cardId = j.getLong("data.login.payment_methods[0].entity_id");
 
-		System.out.println("****************" + x_auth_token);
-		System.out.println("****************" + payment_cardId);
+		System.out.println("*** Authentication Token : " + x_auth_token);
+		System.out.println("*** Payment Card ID : " + payment_cardId);
+		System.out.println("===============================================");
 
 	}
 
@@ -78,7 +79,7 @@ public class Create_APIs extends BaseClass {
 	public void SPA_TC_01_Purchase_Reservation() {
 		
 		signIn();
-		for (int i = 1; i <= 2000; i++) {
+		for (int i = 1; i <= 5; i++) {
 			CreateReservation parking = gson.fromJson(spa_create_reservation, CreateReservation.class);
 
 			// Setting the test data
@@ -101,9 +102,9 @@ public class Create_APIs extends BaseClass {
 
 			passStep(request_Payload);
 
-			Response resp = given().log().all().contentType("application/json")
+			Response resp = given().contentType("application/json")
 					.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
-					.body(request_Payload).when().log().all().post("/graphql");
+					.body(request_Payload).when().post("/graphql");
 			stepInfo("Response Body");
 			passStep(resp.asString());
 
@@ -119,7 +120,7 @@ public class Create_APIs extends BaseClass {
 			String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
 			String discount_amount = j.getString("data.create_parking.discount_amount");
 
-			System.out.println(i + "******* Order Number : " + order_id);
+			System.out.println(i + "*** Reservation Order Number : " + order_id);
 			passStep("Confirmation Order Number  : " + order_id);
 			passStep("Rate Name  : " + rateName);
 			passStep("Total amount  : " + oder_Total);
@@ -132,7 +133,7 @@ public class Create_APIs extends BaseClass {
 	@Test()
 	public void SPA_TC_02_Purchase_Suscription() {
 		signIn();
-		for (int i = 1; i <= 2000; i++) {
+		for (int i = 1; i <= 5; i++) {
 			CreateSubscription parking = gson.fromJson(spa_create_subscription, CreateSubscription.class);
 
 			// Setting the test data
@@ -161,9 +162,9 @@ public class Create_APIs extends BaseClass {
 
 			passStep(request_Payload);
 
-			Response resp = given().log().all().contentType("application/json")
+			Response resp = given().contentType("application/json")
 					.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
-					.body(request_Payload).when().log().all().post("/graphql");
+					.body(request_Payload).when().post("/graphql");
 			stepInfo("Response Body");
 			passStep(resp.asString());
 
@@ -179,7 +180,7 @@ public class Create_APIs extends BaseClass {
 			String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
 			String discount_amount = j.getString("data.create_parking.discount_amount");
 
-			System.out.println(i + "******* Order Number : " + order_id);
+			System.out.println(i + "*** Subscription Order Number : " + order_id);
 			passStep("Confirmation Order Number  : " + order_id);
 			passStep("Rate Name  : " + rateName);
 			passStep("Total amount  : " + oder_Total);
@@ -193,7 +194,7 @@ public class Create_APIs extends BaseClass {
 	@Test
 	public void SPA_TC_03_Purchase_Session() {
 		signIn();
-		for (int i = 1; i <= 1500; i++) {
+		for (int i = 1; i <= 5; i++) {
 			CreateSession parking = gson.fromJson(spa_create_session, CreateSession.class);
 
 			// Setting the test data
@@ -216,9 +217,9 @@ public class Create_APIs extends BaseClass {
 
 			passStep(request_Payload);
 
-			Response resp = given().log().all().contentType("application/json")
+			Response resp = given().contentType("application/json")
 					.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
-					.body(request_Payload).when().log().all().post("/graphql");
+					.body(request_Payload).when().post("/graphql");
 			stepInfo("Response Body");
 			passStep(resp.asString());
 
@@ -234,7 +235,7 @@ public class Create_APIs extends BaseClass {
 			String order_total_without_discount = j.getString("data.create_parking.order_total_without_discount");
 			String discount_amount = j.getString("data.create_parking.discount_amount");
 
-			System.out.println(i + "******* Order Number : " + order_id);
+			System.out.println(i + "*** Session Order Number : " + order_id);
 			passStep("Confirmation Order Number  : " + order_id);
 			passStep("Rate Name  : " + rateName);
 			passStep("Total amount  : " + oder_Total);

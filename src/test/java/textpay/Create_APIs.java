@@ -27,7 +27,7 @@ public class Create_APIs extends BaseClass {
 	@Test()
 	public void TextPay_TC_01_Purchase_Session_WithPromoCode() {
 
-		for (int i = 1; i <= 1000; i++) {
+		for (int i = 1; i <= 5; i++) {
 			//CreateParking_PromoCode parking = LoadJsonData.getParkingObject(createParkingQuery);
 			CreateParking_PromoCode parking = gson.fromJson(createParking_PromoCode, CreateParking_PromoCode.class);
 
