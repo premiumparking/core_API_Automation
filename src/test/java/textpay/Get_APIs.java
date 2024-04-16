@@ -47,7 +47,7 @@ public class Get_APIs extends BaseClass {
 				.headers("source-auth-token", source_auth_token).header("x-auth-token", x_auth_token)
 				.body(request_Payload).when().log().all().post("/graphql");
 		stepInfo("Response Body");
-		passStep(resp.asString());
+		passStep(resp.asPrettyString());
 
 		stepInfo("Response Validation");
 

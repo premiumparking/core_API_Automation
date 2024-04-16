@@ -3,7 +3,7 @@
 <suite name="Suite">
   <test thread-count="1" name="Test" parallel = "methods">
     <classes>
-      <class name="SPA.Create_APIs"/>
+      <class name="textpay.Textpay_APIs"/>
       
     </classes>
   </test> <!-- Test -->

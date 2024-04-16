@@ -34,7 +34,7 @@ public class extentReports {
 		String reportName = "API_Automation_Result_" + timeStamp;
 
 		report = new ExtentReports(
-				System.getProperty("user.dir") + "\\TestResults\\" + d + "\\" + reportName + ".html");
+				System.getProperty("user.dir") + "//TestResults//" + d + "//" + reportName + ".html");
 		// test =
 		// report.startTest(Thread.currentThread().getStackTrace()[1].getMethodName().toString());
 
@@ -58,6 +58,7 @@ public class extentReports {
 	 */
 	public void passStep(String stepinfo) {
 		test.log(LogStatus.PASS, stepinfo);
+		System.out.println(stepinfo);
 	}
 
 	/*
@@ -67,6 +68,7 @@ public class extentReports {
 	 */
 	public void failStep(String stepinfo) {
 		test.log(LogStatus.FAIL, stepinfo);
+		System.out.println(stepinfo);
 	}
 
 	/*
@@ -76,5 +78,6 @@ public class extentReports {
 	 */
 	public void stepInfo(String stepinfo) {
 		test.log(LogStatus.INFO, "<b>" + stepinfo + "</b>");
+		System.out.println("-------------"+stepinfo+"-------------");
 	}
 }
