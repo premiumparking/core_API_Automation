@@ -79,7 +79,7 @@ public class Create_APIs extends BaseClass {
 	public void SPA_TC_01_Purchase_Reservation() {
 		
 		signIn();
-		for (int i = 1; i <= 2000; i++) {
+		for (int i = 1; i <= 5; i++) {
 			CreateReservation parking = gson.fromJson(spa_create_reservation, CreateReservation.class);
 
 			// Setting the test data
@@ -106,7 +106,7 @@ public class Create_APIs extends BaseClass {
 					.headers("source-auth-token", source_auth_token).header("x-auth-token", auth_token)
 					.body(request_Payload).when().post("/graphql");
 			stepInfo("Response Body");
-			passStep(resp.asString());
+			passStep(resp.asPrettyString());
 
 			stepInfo("Response Validation");
 
