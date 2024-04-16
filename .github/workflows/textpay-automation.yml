@@ -1,0 +1,58 @@
+name: TextPay Test Automation
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build with Maven
+        continue-on-error: true
+        run: mvn clean test -DsuiteXmlFile=textpay.xml | tee mvn_output.txt
+
+      - name: Set current date
+        id: set-date
+        run: echo "DATE_STR=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Change PNG Paths
+        run: |
+          sed -i 's|file:////home/runner/work/core_API_Automation/core_API_Automation//TestResults//${{ env.DATE_STR }}//\([^"]*\)|./\1|g' TestResults/${{ env.DATE_STR }}/*.html
+          sed -i 's|/home/runner/work/core_API_Automation/core_API_Automation//TestResults//${{ env.DATE_STR }}//\([^"]*\)|./\1|g' TestResults/${{ env.DATE_STR }}/*.html
+
+      - name: Zip current test report
+        id: zip-test
+        run: |
+          zip -r test-report-${{ env.DATE_STR }}.zip TestResults/${{ env.DATE_STR }}
+        shell: bash
+
+      - name: Echo ZIP
+        run: |
+          echo "echoing where is zip file"
+          ls
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report-${{ env.DATE_STR }}
+          path: ./TestResults/${{ env.DATE_STR }}
+
+      - name: Send email with SparkPost
+        env:
+          SPARKPOST_SMTP_HOST: ${{ secrets.SPARKPOST_SMTP_HOST }}
+          SPARKPOST_SMTP_PORT: ${{ secrets.SPARKPOST_SMTP_PORT }}
+          SPARKPOST_SMTP_USERNAME: ${{ secrets.SPARKPOST_SMTP_USERNAME }}
+          SPARKPOST_SMTP_PASSWORD: ${{ secrets.SPARKPOST_API_KEY }}
+          FROM_EMAIL: "support@premiumparking.com"
+          TO_EMAIL_1: "sivakumar.kurnool@xebia.com"
+          TO_EMAIL_2: "venu.thota@xebia.com"
+          DATE_STR: ${{ env.DATE_STR }}
+        run: python3 send_email_sparkpost.py
