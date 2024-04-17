@@ -21,54 +21,42 @@ jobs:
         continue-on-error: true
         run: mvn clean test -DsuiteXmlFile=textpay.xml | tee mvn_output.txt
 
-      - name: Check if directory exists
-        run: |
-          if [ -d "/home/runner/work/core_API_Automation/core_API_Automation ]; then
-            echo "Directory exists!"
-          else
-            echo "Directory does not exist!"
-          fi
-        shell: bash
-
       - name: Set current date
         id: set-date
         run: echo "DATE_STR=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         shell: bash
 
-      # - name: Find TestResults directory
-      #   run: |
-      #     find . -type d -name "TestResults" -print
-      #   shell: bash
+    
+      - name: Change PNG Paths
+        run: |
+          sed -i 's|file:////home/runner/work/core_API_Automation/core_API_Automation//TestResults//${{ env.DATE_STR }}//\([^"]*\)|./\1|g' TestResults/${{ env.DATE_STR }}/*.html
+          sed -i 's|/home/runner/work/core_API_Automation/core_API_Automation//TestResults//${{ env.DATE_STR }}//\([^"]*\)|./\1|g' TestResults/${{ env.DATE_STR }}/*.html
 
-      # - name: Change PNG Paths
-      #   run: |
-      #     sed -i 's|file:////home/runner/work/core_API_Automation/core_API_Automation//TestResults//${{ env.DATE_STR }}//\([^"]*\)|./\1|g' TestResults/${{ env.DATE_STR }}/*.html
-      #     sed -i 's|/home/runner/work/core_API_Automation/core_API_Automation//TestResults//${{ env.DATE_STR }}//\([^"]*\)|./\1|g' TestResults/${{ env.DATE_STR }}/*.html
+      - name: Zip current test report
+        id: zip-test
+        run: |
+          zip -r test-report-${{ env.DATE_STR }}.zip TestResults/${{ env.DATE_STR }}
+        shell: bash
 
-      # - name: Zip current test report
-      #   id: zip-test
-      #   run: |
-      #     zip -r test-report-${{ env.DATE_STR }}.zip TestResults/${{ env.DATE_STR }}
-      #   shell: bash
+      - name: Echo ZIP
+        run: |
+          echo "echoing where is zip file"
+          ls
 
-      # - name: Echo ZIP
-      #   run: |
-      #     echo "echoing where is zip file"
-      #     ls
-      # - name: Upload Test Report
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: test-report-${{ env.DATE_STR }}
-      #     path: ./TestResults/${{ env.DATE_STR }}
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report-${{ env.DATE_STR }}
+          path: ./TestResults/${{ env.DATE_STR }}
 
-      # - name: Send email with SparkPost
-      #   env:
-      #     SPARKPOST_SMTP_HOST: ${{ secrets.SPARKPOST_SMTP_HOST }}
-      #     SPARKPOST_SMTP_PORT: ${{ secrets.SPARKPOST_SMTP_PORT }}
-      #     SPARKPOST_SMTP_USERNAME: ${{ secrets.SPARKPOST_SMTP_USERNAME }}
-      #     SPARKPOST_SMTP_PASSWORD: ${{ secrets.SPARKPOST_API_KEY }}
-      #     FROM_EMAIL: "support@premiumparking.com"
-      #     TO_EMAIL_1: "sivakumar.kurnool@xebia.com"
-      #     TO_EMAIL_2: "venu.thota@xebia.com"
-      #     DATE_STR: ${{ env.DATE_STR }}
-      #   run: python3 send_email_sparkpost.py
+      - name: Send email with SparkPost
+        env:
+          SPARKPOST_SMTP_HOST: ${{ secrets.SPARKPOST_SMTP_HOST }}
+          SPARKPOST_SMTP_PORT: ${{ secrets.SPARKPOST_SMTP_PORT }}
+          SPARKPOST_SMTP_USERNAME: ${{ secrets.SPARKPOST_SMTP_USERNAME }}
+          SPARKPOST_SMTP_PASSWORD: ${{ secrets.SPARKPOST_API_KEY }}
+          FROM_EMAIL: "support@premiumparking.com"
+          TO_EMAIL_1: "sivakumar.kurnool@xebia.com"
+          TO_EMAIL_2: "venu.thota@xebia.com"
+          DATE_STR: ${{ env.DATE_STR }}
+        run: python3 send_email_sparkpost.py
