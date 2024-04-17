@@ -28,7 +28,6 @@ jobs:
 
       - name: Verify HTML files generation
         run: |
-          ls -l TestResults/${{ env.DATE_STR }}/
           if ls TestResults/${{ env.DATE_STR }}/ | grep -q .; then
             echo "Directory exists!"
           else
