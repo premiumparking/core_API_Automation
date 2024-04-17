@@ -1,5 +1,7 @@
 package textpay.hotelParking;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
@@ -52,7 +54,7 @@ public class HotelParking_APIs extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 
 		String location_id = j.getString("data.location.id");
@@ -68,7 +70,7 @@ public class HotelParking_APIs extends BaseClass {
 			passStep("Hotel Name " + j.getString("data.location.hotels[" + h + "].name"));
 
 		}
-		assertEquals(location_name, Constants.HOTEL_LOCATION);
+		AssertJUnit.assertEquals(location_name, Constants.HOTEL_LOCATION);
 
 	}
 
@@ -98,7 +100,7 @@ public class HotelParking_APIs extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 
 		String location_id = j.getString("data.location.id");
