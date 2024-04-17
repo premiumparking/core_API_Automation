@@ -1,5 +1,7 @@
 name: API Test Automation
 on:
+  # schedule:
+  #   - cron: '0 0 * * *' # Runs every day at midnight UTC
   workflow_dispatch:
 
 jobs:
@@ -27,6 +29,11 @@ jobs:
       - name: Verify HTML files generation
         run: |
           ls -l TestResults/${{ env.DATE_STR }}/
+          if ls TestResults/${{ env.DATE_STR }}/ | grep -q .; then
+            echo "Directory exists!"
+          else
+            echo "Directory does not exist!"
+          fi
         shell: bash
 
       - name: Change PNG Paths
