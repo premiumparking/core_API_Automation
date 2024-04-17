@@ -23,7 +23,7 @@ jobs:
 
       - name: Check if directory exists
         run: |
-          if [ -d "file:////home/runner/work/core_API_Automation/core_API_Automation ]; then
+          if [ -d "/home/runner/work/core_API_Automation/core_API_Automation ]; then
             echo "Directory exists!"
           else
             echo "Directory does not exist!"
