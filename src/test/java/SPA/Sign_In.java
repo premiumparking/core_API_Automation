@@ -1,5 +1,7 @@
 package SPA;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
@@ -52,7 +54,7 @@ public class Sign_In extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 
 		String x_auth_token = j.getString("data.login.auth_token");

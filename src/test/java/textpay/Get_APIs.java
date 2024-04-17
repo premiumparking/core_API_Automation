@@ -1,5 +1,7 @@
 package textpay;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
@@ -52,7 +54,7 @@ public class Get_APIs extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 
 		passStep("Location Id  : " + j.getString("data.location.id"));
@@ -87,7 +89,7 @@ public class Get_APIs extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 		
 		// Getting rate groups list
@@ -138,7 +140,7 @@ public class Get_APIs extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 
 		passStep("State abbreviation  : " + j.getString("data.states.abbreviation"));
@@ -169,7 +171,7 @@ public class Get_APIs extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 
 		passStep("State abbreviation  : " + j.getString("data.state.abbreviation"));

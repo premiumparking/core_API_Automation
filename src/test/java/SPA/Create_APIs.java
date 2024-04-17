@@ -1,5 +1,7 @@
 package SPA;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
@@ -60,7 +62,7 @@ public class Create_APIs extends BaseClass {
 		stepInfo("Response Validation");
 
 		passStep("Received Status code : " + resp.getStatusCode());
-		assertEquals(resp.getStatusCode(), 200);
+		AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 		JsonPath j = new JsonPath(resp.asString());
 		
 		//System.out.println(resp.asPrettyString());
@@ -111,7 +113,7 @@ public class Create_APIs extends BaseClass {
 			stepInfo("Response Validation");
 
 			passStep("Received Status code : " + resp.getStatusCode());
-			assertEquals(resp.getStatusCode(), 200);
+			AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 			JsonPath j = new JsonPath(resp.asString());
 
 			String order_id = j.getString("data.create_parking.order_number_id");
@@ -171,7 +173,7 @@ public class Create_APIs extends BaseClass {
 			stepInfo("Response Validation");
 
 			passStep("Received Status code : " + resp.getStatusCode());
-			assertEquals(resp.getStatusCode(), 200);
+			AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 			JsonPath j = new JsonPath(resp.asString());
 
 			String order_id = j.getString("data.create_parking.order_number_id");
@@ -226,7 +228,7 @@ public class Create_APIs extends BaseClass {
 			stepInfo("Response Validation");
 
 			passStep("Received Status code : " + resp.getStatusCode());
-			assertEquals(resp.getStatusCode(), 200);
+			AssertJUnit.assertEquals(resp.getStatusCode(), 200);
 			JsonPath j = new JsonPath(resp.asString());
 
 			String order_id = j.getString("data.create_parking.order_number_id");
