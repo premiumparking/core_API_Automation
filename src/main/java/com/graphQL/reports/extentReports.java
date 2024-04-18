@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.testng.ITestResult;
+import org.testng.TestListenerAdapter;
 import org.testng.annotations.*;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
@@ -14,7 +16,7 @@ import com.relevantcodes.extentreports.LogStatus;
  * 
  * Author : Venu Thota (venu.t@comakeit.com)
  */
-public class extentReports {
+public class extentReports extends TestListenerAdapter {
 
 	protected static ExtentTest test;
 	public static ExtentReports report;
@@ -78,6 +80,8 @@ public class extentReports {
 	 */
 	public void stepInfo(String stepinfo) {
 		test.log(LogStatus.INFO, "<b>" + stepinfo + "</b>");
-		System.out.println("-------------"+stepinfo+"-------------");
+		System.out.println("-------------" + stepinfo + "-------------");
 	}
+
+	
 }
