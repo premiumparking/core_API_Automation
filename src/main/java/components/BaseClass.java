@@ -2,11 +2,6 @@ package components;
 
 import static io.restassured.RestAssured.given;
 
-import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,12 +14,12 @@ import java.util.Properties;
 import java.util.Random;
 
 import org.testng.ITestResult;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.graphQL.reports.extentReports;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 /*
@@ -124,11 +119,16 @@ public class BaseClass extends extentReports {
 	 */
 	@AfterMethod
 	public void getResult(ITestResult result) throws IOException {
+
+		String testcaseName = result.getName().split(" ")[0];
 		if (result.getStatus() == ITestResult.FAILURE) {
-			stepInfo("Failed Due to below exception : ");
+			stepInfo("Failed due to below exception : ");
 			failStep(result.getThrowable().toString());
+			failStep("Testcase" + testcaseName + " Failed");
 		} else if (result.getStatus() == ITestResult.SUCCESS) {
-			passStep("Testcase passed");
+			passStep("Testcase" + testcaseName + " Passed");
+		} else if (result.getStatus() == ITestResult.SKIP) {
+			passStep("Testcase" + testcaseName + " Skipped");
 		}
 	}
 
