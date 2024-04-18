@@ -49,14 +49,14 @@ jobs:
           name: test-report-${{ env.DATE_STR }}
           path: ./TestResults/${{ env.DATE_STR }}
 
-      # - name: Send email with SparkPost
-      #   env:
-      #     SPARKPOST_SMTP_HOST: ${{ secrets.SPARKPOST_SMTP_HOST }}
-      #     SPARKPOST_SMTP_PORT: ${{ secrets.SPARKPOST_SMTP_PORT }}
-      #     SPARKPOST_SMTP_USERNAME: ${{ secrets.SPARKPOST_SMTP_USERNAME }}
-      #     SPARKPOST_SMTP_PASSWORD: ${{ secrets.SPARKPOST_API_KEY }}
-      #     FROM_EMAIL: "support@premiumparking.com"
-      #     TO_EMAIL_1: "sivakumar.kurnool@xebia.com"
-      #     TO_EMAIL_2: "venu.thota@xebia.com"
-      #     DATE_STR: ${{ env.DATE_STR }}
-      #   run: python3 send_email_sparkpost.py
+      - name: Send email with SparkPost
+        env:
+          SPARKPOST_SMTP_HOST: ${{ secrets.SPARKPOST_SMTP_HOST }}
+          SPARKPOST_SMTP_PORT: ${{ secrets.SPARKPOST_SMTP_PORT }}
+          SPARKPOST_SMTP_USERNAME: ${{ secrets.SPARKPOST_SMTP_USERNAME }}
+          SPARKPOST_SMTP_PASSWORD: ${{ secrets.SPARKPOST_API_KEY }}
+          FROM_EMAIL: "support@premiumparking.com"
+          TO_EMAIL_1: "sivakumar.kurnool@xebia.com"
+          TO_EMAIL_2: "venu.thota@xebia.com"
+          DATE_STR: ${{ env.DATE_STR }}
+        run: python3 send_email_sparkpost.py
