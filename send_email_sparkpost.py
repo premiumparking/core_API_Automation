@@ -42,8 +42,8 @@ except FileNotFoundError:
 # Email settings
 from_email = os.getenv('FROM_EMAIL')
 to_emails = [os.getenv('TO_EMAIL_1'), os.getenv('TO_EMAIL_2')]
-subject = f"Textpay Automation Test Report for {date_str}"
-body = f"The textpay automation test report for {date_str} is attached.\n\nTest Summary:\n{test_summary}"
+subject = f"API Automation Test Report for {date_str}"
+body = f"The API automation test report for {date_str} is attached.\n\nTest Summary:\n{test_summary}"
 
 # Create a multipart message
 msg = MIMEMultipart()
