@@ -1,6 +1,7 @@
 package components;
 
 import static io.restassured.RestAssured.given;
+import static org.testng.Assert.assertEquals;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +31,7 @@ import io.restassured.response.Response;
 public class BaseClass extends extentReports {
 
 	protected String env, uri = "";
-	protected String source_auth_token, x_auth_token;
+	protected String source_auth_token, x_auth_token, recaptcha_token;
 	protected String spa_x_auth_token, spa_userName, spa_Password;
 	Properties config;
 	FileInputStream fis;
@@ -57,6 +58,7 @@ public class BaseClass extends extentReports {
 		spa_x_auth_token = config.getProperty("spa_x_auth_token");
 		spa_userName = config.getProperty("spa_username");
 		spa_Password = config.getProperty("spa_password");
+		recaptcha_token = config.getProperty("recaptcha_token");
 
 	}
 
@@ -126,7 +128,7 @@ public class BaseClass extends extentReports {
 			failStep(result.getThrowable().toString());
 			failStep("Testcase" + testcaseName + " Failed");
 		} else if (result.getStatus() == ITestResult.SUCCESS) {
-			passStep("Testcase" + testcaseName + " Passed");
+			passStep("Testcase " + testcaseName + " Passed");
 		} else if (result.getStatus() == ITestResult.SKIP) {
 			passStep("Testcase" + testcaseName + " Skipped");
 		}
@@ -299,6 +301,8 @@ public class BaseClass extends extentReports {
 		}
 		stepInfo("Response Body");
 		passStep(resp.asPrettyString());
+		passStep("Received Status code : " + resp.getStatusCode());
+		assertEquals(resp.getStatusCode(), 200);
 		return resp;
 	}
 

@@ -1,9 +1,8 @@
 package textpay;
 
-import org.testng.annotations.Test;
-import org.testng.AssertJUnit;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class Textpay_APIs extends BaseClass {
 
 	Response response = null;
 
-	@Test(groups = "smoke")
+	@Test(groups = "smoke", priority = 1)
 	public void TC_01_GetLoginInfo() {
 		System.out.println("================= TC_01_GetLoginInfo =================");
 
@@ -82,7 +81,7 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_01_GetLoginInfo")
+	@Test(groups = "smoke", dependsOnMethods = "TC_01_GetLoginInfo", priority = 2)
 	public void TC_02_sendPhoneVerificationCode() {
 		System.out.println("================= TC_02_sendPhoneVerificationCode =================");
 		Query query = gson.fromJson(sendPhoneVerificationCode, Query.class);
@@ -110,7 +109,7 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_02_sendPhoneVerificationCode")
+	@Test(groups = "smoke", dependsOnMethods = "TC_02_sendPhoneVerificationCode", priority = 3)
 	public void TC_03_verifyPhoneNumber() {
 
 		System.out.println("================= TC_03_verifyPhoneNumber =================");
@@ -145,7 +144,7 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber")
+	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber", priority = 4)
 	public void TC_04_getCurrentProfile() {
 
 		System.out.println("================= TC_04_currentProfile =================");
@@ -174,10 +173,10 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber")
-	public void TC_05_getLocationPageData() {
+	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber", priority = 5)
+	public void TC_05_getLocationPageData_on_TextPay() {
 
-		System.out.println("================= TC_05_getLocationPageData =================");
+		System.out.println("================= TC_05_getLocationPageData_on_TextPay =================");
 		// Setting the test data
 		Query query = gson.fromJson(getLocationPageData, Query.class);
 
@@ -207,10 +206,43 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber")
-	public void TC_06_getPersonalVehicles() {
+	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber", priority = 6)
+	public void TC_06_getLocationPageData_on_CameraPay() {
 
-		System.out.println("================= TC_06_getPersonalVehicles =================");
+		System.out.println("================= TC_06_getLocationPageData_on_CameraPay =================");
+		// Setting the test data
+		Query query = gson.fromJson(getLocationPageData, Query.class);
+
+		LocationPageDataVariable locationPageDataVariable = new LocationPageDataVariable();
+		locationPageDataVariable.setName(location_name);
+		List<String> sources = new ArrayList<>();
+		sources.add(Constants.CAMERAPAY);
+		locationPageDataVariable.setSources(sources);
+
+		query.setVariables(locationPageDataVariable);
+
+		String request_Payload = gson.toJson(query);
+
+		response = hit_GraphQL_EndPoint(request_Payload, auth_token);
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + response.getStatusCode());
+		assertEquals(response.getStatusCode(), 200);
+		JsonPath j = new JsonPath(response.asString());
+		passStep("Location Id : " + j.getString("data.location.id"));
+		passStep("Location Name : " + j.getString("data.location.name"));
+		passStep("Location Address : " + j.getString("data.location.address"));
+		assertNotNull(j.getString("data.location.id"), "Lolcation id is null");
+		assertNotNull(j.getString("data.location.name"), "Lolcation name is null");
+		System.out.println("========================= END =========================");
+
+	}
+
+	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber", priority = 7)
+	public void TC_07_getPersonalVehicles() {
+
+		System.out.println("================= TC_07_getPersonalVehicles =================");
 		// Setting the test data
 		Query query = gson.fromJson(personalVehicles, Query.class);
 		String request_Payload = gson.toJson(query);
@@ -240,10 +272,10 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber")
-	public void TC_07_getLocationRates() {
+	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber", priority = 8)
+	public void TC_08_getLocationRates() {
 
-		System.out.println("================= TC_07_getLocationRates =================");
+		System.out.println("================= TC_08_getLocationRates =================");
 		// Setting the test data
 		Query query = gson.fromJson(getLocationRates, Query.class);
 
@@ -301,10 +333,10 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber")
-	public void TC_08_getStates() {
+	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber", priority = 9)
+	public void TC_09_getStates() {
 
-		System.out.println("================= TC_08_getStates =================");
+		System.out.println("================= TC_09_getStates =================");
 		// Setting the test data
 		Query query = gson.fromJson(getStates, Query.class);
 
@@ -333,10 +365,10 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = { "TC_06_getPersonalVehicles", "TC_07_getLocationRates" })
-	public void TC_09_getParkingCostByRate() {
+	@Test(groups = "smoke", dependsOnMethods = { "TC_07_getPersonalVehicles", "TC_08_getLocationRates" }, priority = 10)
+	public void TC_10_getParkingCostByRate_On_TextPay() {
 
-		System.out.println("================= TC_09_getParkingCostByRate =================");
+		System.out.println("================= TC_10_getParkingCostByRate_On_TextPay =================");
 		// Setting the test data
 		Query query = gson.fromJson(getParkingCostByRate, Query.class);
 
@@ -391,10 +423,68 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = { "TC_06_getPersonalVehicles", "TC_07_getLocationRates" })
-	public void TC_10_getParkingCostByDuration() {
+	@Test(groups = "smoke", dependsOnMethods = { "TC_07_getPersonalVehicles", "TC_08_getLocationRates" }, priority = 11)
+	public void TC_11_getParkingCostByRate_On_CameraPay() {
 
-		System.out.println("================= TC_10_getParkingCostByDuration =================");
+		System.out.println("================= TC_11_getParkingCostByRate_On_CameraPay =================");
+		// Setting the test data
+		Query query = gson.fromJson(getParkingCostByRate, Query.class);
+
+		ParkingCostVariable parkingCostByRateVariable = new ParkingCostVariable();
+		Vehicles vehicle = new Vehicles();
+		ParkingLotsVariable parkingLot = new ParkingLotsVariable();
+
+		if (vehicle_id == null) {
+			vehicle.setMake(getRandom_Vehicle_Make().toUpperCase());
+			vehicle.setColor(getRandom_Vehicle_Color().toUpperCase());
+			vehicle.setBody_type(getRandom_Vehicle_Type().toUpperCase());
+			parkingLot.setUnknown_vehicle(true);
+		} else
+			vehicle.setId(Integer.parseInt(vehicle_id));
+
+		List<Vehicles> pl_vehicles = new ArrayList<>();
+		pl_vehicles.add(vehicle);
+
+		parkingLot.setVehicles(pl_vehicles);
+
+		List<ParkingLotsVariable> parkingLots = new ArrayList<>();
+		parkingLots.add(parkingLot);
+
+		parkingCostByRateVariable.setParking_lots(parkingLots);
+
+		parkingCostByRateVariable.setCheckout(true);
+		parkingCostByRateVariable.setLocation_id(Integer.parseInt(location_id));
+		parkingCostByRateVariable.setParking_time_type(Constants.SESSION);
+		parkingCostByRateVariable.setSource(Constants.CAMERAPAY);
+		parkingCostByRateVariable.setPayment_method_type(Constants.CARD);
+		parkingCostByRateVariable.setApply_wallet_credit(true);
+		if (rate_id != null)
+			parkingCostByRateVariable.setParking_time_rate_id(Integer.parseInt(rate_id));
+		else
+			assertNotNull(rate_id, "No rate available for location " + location_name + ". Please configure the rates");
+
+		query.setVariables(parkingCostByRateVariable);
+
+		String request_Payload = gson.toJson(query);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		response = hit_GraphQL_EndPoint(request_Payload, auth_token);
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + response.getStatusCode());
+		assertEquals(response.getStatusCode(), 200);
+
+		System.out.println("========================= END =========================");
+
+	}
+
+	@Test(groups = "smoke", dependsOnMethods = { "TC_07_getPersonalVehicles", "TC_08_getLocationRates" }, priority = 12)
+	public void TC_12_getParkingCostByDuration_on_Textpay() {
+
+		System.out.println("================= TC_12_getParkingCostByDuration_on_Textpay =================");
 		// Setting the test data
 		Query query = gson.fromJson(getParkingCostByDuration, Query.class);
 
@@ -448,10 +538,67 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber")
-	public void TC_11_getpersonalDataForCheckout() {
+	@Test(groups = "smoke", dependsOnMethods = { "TC_07_getPersonalVehicles", "TC_08_getLocationRates" }, priority = 13)
+	public void TC_13_getParkingCostByDuration_on_Camerapay() {
 
-		System.out.println("================= TC_11_getpersonalDataForCheckout =================");
+		System.out.println("================= TC_13_getParkingCostByDuration_on_Camerapay =================");
+		// Setting the test data
+		Query query = gson.fromJson(getParkingCostByDuration, Query.class);
+
+		ParkingCostVariable parkingCostByDurationVariable = new ParkingCostVariable();
+		ParkingLotsVariable parkingLot = new ParkingLotsVariable();
+		Vehicles vehicle = new Vehicles();
+		if (vehicle_id == null) {
+			vehicle.setMake(getRandom_Vehicle_Make().toUpperCase());
+			vehicle.setColor(getRandom_Vehicle_Color().toUpperCase());
+			vehicle.setBody_type(getRandom_Vehicle_Type().toUpperCase());
+			parkingLot.setUnknown_vehicle(true);
+		} else
+			vehicle.setId(Integer.parseInt(vehicle_id));
+
+		List<Vehicles> pl_vehicles = new ArrayList<>();
+		pl_vehicles.add(vehicle);
+
+		parkingLot.setVehicles(pl_vehicles);
+
+		List<ParkingLotsVariable> parkingLots = new ArrayList<>();
+		parkingLots.add(parkingLot);
+
+		parkingCostByDurationVariable.setParking_lots(parkingLots);
+
+		parkingCostByDurationVariable.setCheckout(true);
+		parkingCostByDurationVariable.setLocation_id(Integer.parseInt(location_id));
+		parkingCostByDurationVariable.setParking_time_type(Constants.SESSION);
+		parkingCostByDurationVariable.setSource(Constants.CAMERAPAY);
+		parkingCostByDurationVariable.setPayment_method_type(Constants.CARD);
+		parkingCostByDurationVariable.setApply_wallet_credit(true);
+		parkingCostByDurationVariable.setMinutes(Integer.parseInt(minutes));
+
+		query.setVariables(parkingCostByDurationVariable);
+
+		String request_Payload = gson.toJson(query);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		response = hit_GraphQL_EndPoint(request_Payload, auth_token);
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + response.getStatusCode());
+		assertEquals(response.getStatusCode(), 200);
+		JsonPath j = new JsonPath(response.asString());
+		passStep("minutes :" + j.getString("data.parking_cost_by_duration.minutes"));
+		assertEquals(j.getString("data.parking_cost_by_duration.minutes"), minutes);
+
+		System.out.println("========================= END =========================");
+
+	}
+
+	@Test(groups = "smoke", dependsOnMethods = "TC_03_verifyPhoneNumber", priority = 14)
+	public void TC_14_getpersonalDataForCheckout() {
+
+		System.out.println("================= TC_14_getpersonalDataForCheckout =================");
 		// Setting the test data
 		Query query = gson.fromJson(personalDataForCheckout, Query.class);
 
@@ -489,10 +636,11 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = { "TC_07_getLocationRates", "TC_11_getpersonalDataForCheckout" })
-	public void TC_12_createParking_with_Card() {
+	@Test(groups = "smoke", dependsOnMethods = { "TC_08_getLocationRates",
+			"TC_14_getpersonalDataForCheckout" }, priority = 15)
+	public void TC_15_createParking_with_Card_On_textPay() {
 
-		System.out.println("================= TC_12_createParking_with_Card =================");
+		System.out.println("================= TC_15_createParking_with_Card_On_textPay =================");
 		// Setting the test data
 		Query query = gson.fromJson(createParking, Query.class);
 		String token = null;
@@ -554,10 +702,77 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_07_getLocationRates")
-	public void TC_13_createParking_with_new_Vehicle_and_New_Card() {
+	@Test(groups = "smoke", dependsOnMethods = { "TC_08_getLocationRates",
+			"TC_14_getpersonalDataForCheckout" }, priority = 16)
+	public void TC_16_createParking_with_Card_On_CameraPay() {
 
-		System.out.println("================= TC_13_createParking_with_new_Vehicle_and_New_Card =================");
+		System.out.println("================= TC_16_createParking_with_Card_On_CameraPay =================");
+		// Setting the test data
+		Query query = gson.fromJson(createParking, Query.class);
+		String token = null;
+
+		CreateParkingVariable createParkingVariable = new CreateParkingVariable();
+		Vehicles vehicle = new Vehicles();
+		ParkingLotsVariable parkingLot = new ParkingLotsVariable();
+
+		vehicle.setMake(getRandom_Vehicle_Make().toUpperCase());
+		vehicle.setColor(getRandom_Vehicle_Color().toUpperCase());
+		vehicle.setBody_type(getRandom_Vehicle_Type().toUpperCase());
+		parkingLot.setUnknown_vehicle(true);
+
+		if (card_id == null) {
+			token = getStripeToken();
+			createParkingVariable.setToken(token);
+		} else
+			createParkingVariable.setCard_id(Long.parseLong(card_id));
+
+		List<Vehicles> pl_vehicles = new ArrayList<>();
+		pl_vehicles.add(vehicle);
+
+		parkingLot.setVehicles(pl_vehicles);
+
+		List<ParkingLotsVariable> parkingLots = new ArrayList<>();
+		parkingLots.add(parkingLot);
+
+		createParkingVariable.setMinutes(Integer.parseInt(minutes));
+		createParkingVariable.setApply_wallet_credit(true);
+		createParkingVariable.setLocation_id(Integer.parseInt(location_id));
+		createParkingVariable.setParking_time_type(Constants.SESSION);
+
+		createParkingVariable.setSave_payment_method(true);
+		createParkingVariable.setSource(Constants.CAMERAPAY);
+		createParkingVariable.setPayment_method_type(Constants.CARD);
+
+		createParkingVariable.setParking_lots(parkingLots);
+
+		query.setVariables(createParkingVariable);
+
+		String request_Payload = gson.toJson(query);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		response = hit_GraphQL_EndPoint(request_Payload, auth_token);
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + response.getStatusCode());
+		assertEquals(response.getStatusCode(), 200);
+		JsonPath j = new JsonPath(response.asString());
+
+		order_number_id = j.getString("data.create_parking.order_number_id");
+		passStep("order_number_id :" + order_number_id);
+		assertNotNull(j.getString("data.create_parking.order_number_id"), "order_number_id is null");
+
+		System.out.println("========================= END =========================");
+
+	}
+
+	@Test(groups = "smoke", dependsOnMethods = "TC_08_getLocationRates", priority = 17)
+	public void TC_17_createParking_with_new_Vehicle_and_New_Card_On_Textpay() {
+
+		System.out.println(
+				"================= TC_17_createParking_with_new_Vehicle_and_New_Card_On_Textpay =================");
 
 		Query query = gson.fromJson(createParking, Query.class);
 		String token = null;
@@ -615,10 +830,73 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = { "TC_07_getLocationRates" })
-	public void TC_14_createParking_with_new_Vehicle_with_Promocode() {
+	@Test(groups = "smoke", dependsOnMethods = "TC_08_getLocationRates", priority = 18)
+	public void TC_18_createParking_with_new_Vehicle_and_New_Card_On_Camerapay() {
 
-		System.out.println("================= TC_14_createParking_with_new_Vehicle_with_Promocode =================");
+		System.out.println(
+				"================= TC_18_createParking_with_new_Vehicle_and_New_Card_On_Camerapay =================");
+
+		Query query = gson.fromJson(createParking, Query.class);
+		String token = null;
+
+		CreateParkingVariable createParkingVariable = new CreateParkingVariable();
+		Vehicles vehicle = new Vehicles();
+		ParkingLotsVariable parkingLot = new ParkingLotsVariable();
+
+		vehicle.setMake(getRandom_Vehicle_Make().toUpperCase());
+		vehicle.setColor(getRandom_Vehicle_Color().toUpperCase());
+		vehicle.setBody_type(getRandom_Vehicle_Type().toUpperCase());
+		vehicle.setId(null);
+		parkingLot.setUnknown_vehicle(true);
+
+		token = getStripeToken();
+		createParkingVariable.setToken(token);
+
+		List<Vehicles> pl_vehicles = new ArrayList<>();
+		pl_vehicles.add(vehicle);
+
+		parkingLot.setVehicles(pl_vehicles);
+
+		List<ParkingLotsVariable> parkingLots = new ArrayList<>();
+		parkingLots.add(parkingLot);
+
+		createParkingVariable.setMinutes(Integer.parseInt(minutes));
+		createParkingVariable.setApply_wallet_credit(true);
+		createParkingVariable.setLocation_id(Integer.parseInt(location_id));
+		createParkingVariable.setParking_time_type(Constants.SESSION);
+
+		createParkingVariable.setSave_payment_method(true);
+		createParkingVariable.setSource(Constants.CAMERAPAY);
+		createParkingVariable.setPayment_method_type(Constants.CARD);
+
+		createParkingVariable.setParking_lots(parkingLots);
+
+		query.setVariables(createParkingVariable);
+
+		String request_Payload = gson.toJson(query);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		response = hit_GraphQL_EndPoint(request_Payload, auth_token);
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + response.getStatusCode());
+		assertEquals(response.getStatusCode(), 200);
+		JsonPath j = new JsonPath(response.asString());
+		passStep("order_number_id :" + j.getString("data.create_parking.order_number_id"));
+		assertNotNull(j.getString("data.create_parking.order_number_id"), "order_number_id is null");
+
+		System.out.println("========================= END =========================");
+
+	}
+
+	@Test(groups = "smoke", dependsOnMethods = { "TC_08_getLocationRates" }, priority = 19)
+	public void TC_19_createParking_with_new_Vehicle_with_Promocode_On_TextPay() {
+
+		System.out.println(
+				"================= TC_19_createParking_with_new_Vehicle_with_Promocode_On_TextPay =================");
 		// Setting the test data
 		Query query = gson.fromJson(createParking, Query.class);
 
@@ -677,10 +955,73 @@ public class Textpay_APIs extends BaseClass {
 
 	}
 
-	@Test(groups = "smoke", dependsOnMethods = "TC_14_createParking_with_new_Vehicle_with_Promocode")
-	public void TC_15_Extend_Existing_Parking() {
+	@Test(groups = "smoke", dependsOnMethods = { "TC_08_getLocationRates" }, priority = 20)
+	public void TC_20_createParking_with_new_Vehicle_with_Promocode_On_CameraPay() {
 
-		System.out.println("================= TC_15_Extend_Existing_Parking =================");
+		System.out.println(
+				"================= TC_19_createParking_with_new_Vehicle_with_Promocode_On_TextPay =================");
+		// Setting the test data
+		Query query = gson.fromJson(createParking, Query.class);
+
+		CreateParkingVariable createParkingVariable = new CreateParkingVariable();
+
+		Vehicles vehicle = new Vehicles();
+		vehicle.setMake(getRandom_Vehicle_Make().toUpperCase());
+		vehicle.setColor(getRandom_Vehicle_Color().toUpperCase());
+		vehicle.setBody_type(getRandom_Vehicle_Type().toUpperCase());
+		vehicle.setId(null);
+
+		List<Vehicles> pl_vehicles = new ArrayList<>();
+		pl_vehicles.add(vehicle);
+
+		ParkingLotsVariable parkingLot = new ParkingLotsVariable();
+		parkingLot.setVehicles(pl_vehicles);
+		parkingLot.setUnknown_vehicle(true);
+
+		List<ParkingLotsVariable> parkingLots = new ArrayList<>();
+		parkingLots.add(parkingLot);
+
+		createParkingVariable.setMinutes(Integer.parseInt(minutes));
+		createParkingVariable.setApply_wallet_credit(true);
+		createParkingVariable.setLocation_id(Integer.parseInt(location_id));
+		createParkingVariable.setParking_time_type(Constants.SESSION);
+		createParkingVariable.setPromo_code(Constants.PPFSTEST);
+		createParkingVariable.setSave_payment_method(true);
+		createParkingVariable.setSource(Constants.CAMERAPAY);
+		createParkingVariable.setPayment_method_type(Constants.CARD);
+
+		createParkingVariable.setParking_lots(parkingLots);
+
+		query.setVariables(createParkingVariable);
+
+		String request_Payload = gson.toJson(query);
+
+		RestAssured.baseURI = uri;
+		stepInfo("Request Payload");
+
+		response = hit_GraphQL_EndPoint(request_Payload, auth_token);
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + response.getStatusCode());
+		assertEquals(response.getStatusCode(), 200);
+		JsonPath j = new JsonPath(response.asString());
+		order_number_id = j.getString("data.create_parking.order_number_id");
+		passStep("order_number_id :" + order_number_id);
+		passStep("order_total :" + j.getString("data.create_parking.order_total"));
+		passStep("promo_code :" + j.getString("data.create_parking.promo_code"));
+		assertNotNull(j.getString("data.create_parking.order_number_id"), "order_number_id is null");
+		assertEquals(j.getString("data.create_parking.order_total"), "0.0");
+		assertEquals(j.getString("data.create_parking.promo_code"), Constants.PPFSTEST);
+
+		System.out.println("========================= END =========================");
+
+	}
+
+	@Test(groups = "smoke", dependsOnMethods = "TC_19_createParking_with_new_Vehicle_with_Promocode_On_TextPay", priority = 21)
+	public void TC_21_Extend_Existing_Parking_On_TextPay() {
+
+		System.out.println("================= TC_21_Extend_Existing_Parking_On_TextPay =================");
 
 		Query query = gson.fromJson(extendParking, Query.class);
 
@@ -691,6 +1032,41 @@ public class Textpay_APIs extends BaseClass {
 		extendParkingVariable.setApply_wallet_credit(true);
 		extendParkingVariable.setSave_payment_method(true);
 		extendParkingVariable.setSource(Constants.TEXTPAY);
+		extendParkingVariable.setPayment_method_type(Constants.CARD);
+		extendParkingVariable.setToken(getStripeToken());
+
+		query.setVariables(extendParkingVariable);
+
+		String request_Payload = gson.toJson(query);
+
+		response = hit_GraphQL_EndPoint(request_Payload, auth_token);
+
+		stepInfo("Response Validation");
+
+		passStep("Received Status code : " + response.getStatusCode());
+		assertEquals(response.getStatusCode(), 200);
+		JsonPath j = new JsonPath(response.asString());
+		passStep("order_number_id :" + j.getString("data.extend_parking.order_number_id"));
+		assertEquals(j.getString("data.extend_parking.order_number_id"), order_number_id);
+
+		System.out.println("========================= END =========================");
+
+	}
+
+	@Test(groups = "smoke", dependsOnMethods = "TC_20_createParking_with_new_Vehicle_with_Promocode_On_CameraPay", priority = 22)
+	public void TC_22_Extend_Existing_Parking_On_CameraPay() {
+
+		System.out.println("================= TC_22_Extend_Existing_Parking_On_CameraPay =================");
+
+		Query query = gson.fromJson(extendParking, Query.class);
+
+		ExtendParkingVariable extendParkingVariable = new ExtendParkingVariable();
+
+		extendParkingVariable.setMinutes(60);
+		extendParkingVariable.setOrder_number_id(Long.parseLong(order_number_id));
+		extendParkingVariable.setApply_wallet_credit(true);
+		extendParkingVariable.setSave_payment_method(true);
+		extendParkingVariable.setSource(Constants.CAMERAPAY);
 		extendParkingVariable.setPayment_method_type(Constants.CARD);
 		extendParkingVariable.setToken(getStripeToken());
 
