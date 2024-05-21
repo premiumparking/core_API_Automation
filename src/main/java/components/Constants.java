@@ -16,6 +16,7 @@ public class Constants {
 	public static final int _5HRS = 300;
 	public static final String[] LOCATIONS = { "P101" };
 	public static final String TEXTPAY = "TEXTPAY";
+	public static final String CAMERAPAY = "CAMERAPAY";
 	public static final String CARD = "CARD";
 	public static final String HOTEL_LOCATION = "P1202";
 	public static final String WEB = "WEB";

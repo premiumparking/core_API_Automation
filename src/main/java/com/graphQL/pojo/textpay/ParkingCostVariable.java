@@ -14,7 +14,9 @@ public class ParkingCostVariable {
 	List<PeekTravelProduct> peek_travel_products;
 	List<PartnerProductKinds> partner_product_kinds;
 	Integer parking_time_rate_id;
-	int minutes;
+	Integer minutes;
+	Long starts_at;
+	Long expires_at;
 
 	public boolean isCheckout() {
 		return isCheckout;
@@ -104,12 +106,28 @@ public class ParkingCostVariable {
 		this.parking_time_rate_id = parking_time_rate_id;
 	}
 
-	public int getMinutes() {
+	public Integer getMinutes() {
 		return minutes;
 	}
 
-	public void setMinutes(int minutes) {
+	public void setMinutes(Integer minutes) {
 		this.minutes = minutes;
+	}
+
+	public Long getStarts_at() {
+		return starts_at;
+	}
+
+	public void setStarts_at(Long starts_at) {
+		this.starts_at = starts_at;
+	}
+
+	public Long getExpires_at() {
+		return expires_at;
+	}
+
+	public void setExpires_at(Long expires_at) {
+		this.expires_at = expires_at;
 	}
 
 }
