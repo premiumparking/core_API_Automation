@@ -58,7 +58,7 @@ public class extentReports extends TestListenerAdapter {
 	 * 
 	 * Author : Venu Thota (venu.t@comakeit.com)
 	 */
-	public void passStep(String stepinfo) {
+	public synchronized void passStep(String stepinfo) {
 		test.log(LogStatus.PASS, stepinfo);
 		System.out.println(stepinfo);
 	}
@@ -68,7 +68,7 @@ public class extentReports extends TestListenerAdapter {
 	 * 
 	 * Author : Venu Thota (venu.t@comakeit.com)
 	 */
-	public void failStep(String stepinfo) {
+	public synchronized void failStep(String stepinfo) {
 		test.log(LogStatus.FAIL, stepinfo);
 		System.out.println(stepinfo);
 	}
@@ -78,7 +78,7 @@ public class extentReports extends TestListenerAdapter {
 	 * 
 	 * Author : Venu Thota (venu.t@comakeit.com)
 	 */
-	public void stepInfo(String stepinfo) {
+	public synchronized void stepInfo(String stepinfo) {
 		test.log(LogStatus.INFO, "<b>" + stepinfo + "</b>");
 		System.out.println("-------------" + stepinfo + "-------------");
 	}
