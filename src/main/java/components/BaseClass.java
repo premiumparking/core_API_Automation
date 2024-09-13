@@ -51,7 +51,8 @@ public class BaseClass extends extentReports {
 		test = report.startTest(getTestCaseName(testMethod));
 
 		config.load(fis);
-		env = config.getProperty("env");
+		//env = config.getProperty("env");
+		env = System.getProperty("env", "staging");
 		uri = config.getProperty(env + "_uri");
 		source_auth_token = config.getProperty("source-auth-token");
 		x_auth_token = config.getProperty("x-auth-token");
